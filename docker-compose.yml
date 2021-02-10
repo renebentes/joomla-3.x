@@ -1,11 +1,22 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  web-server:
-    container_name: web-server
+  builder:
+    container_name: joomlagov_builder
+    build:
+      context: .
+      dockerfile: Dockerfile-node
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - .:/usr/src/joomlagov
+    command: gulp default --host web
+
+  web:
+    container_name: joomlagov_web
     build: .
     ports:
       - "80:80"
-      - "3000:3000"
     volumes:
-      - ./:/var/www/html
+      - .:/var/www/html
