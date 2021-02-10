@@ -1,6 +1,7 @@
 FROM php:7-apache
 
-LABEL mantainer="Rene Bentes Pinto <github.com/renebentes>"
+LABEL author: Rene Bentes Pinto <github.com/renebentes> \
+	name=joomlagov/web version=0.2.0
 
 # Enable Apache Rewrite Module
 RUN a2enmod rewrite
@@ -65,17 +66,5 @@ RUN set -ex; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
-
-# Installing Node and dependencies
-
-RUN curl -sSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash; \
-	. ~/.bashrc; \
-	nvm install --lts; \
-	\
-	npm i -g npm@latest gulp-cli; \
-	npm i
-
-EXPOSE 3000
-EXPOSE 80
 
 CMD [ "apache2-foreground" ]
