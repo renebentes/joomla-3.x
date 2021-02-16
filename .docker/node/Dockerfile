@@ -1,11 +1,13 @@
 FROM node:slim
 
 LABEL author: Rene Bentes Pinto <github.com/renebentes> \
-	name=joomlagov/builder version=0.1.0
+	name=joomlagov/builder version=1.0.0
 
 WORKDIR /usr/src/joomlagov
 
-# Installing latest npm, gulp-cli and dependencies
+COPY . ./
+
+# Installing latest npm and gulp-cli and dependencies
 RUN npm i -g npm@latest gulp-cli; \
 	npm i
 
