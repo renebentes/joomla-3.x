@@ -3,6 +3,7 @@ version: '3.9'
 services:
   builder:
     container_name: joomlagov_builder
+    restart: always
     build:
       context: .
       dockerfile: ./.docker/node/Dockerfile
@@ -13,6 +14,7 @@ services:
 
   web:
     container_name: joomlagov_web
+    restart: always
     build:
       context: .
       dockerfile: ./.docker/php/Dockerfile
@@ -26,5 +28,6 @@ services:
   db:
     container_name: joomlagov_db
     image: mysql:5
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: brasil
