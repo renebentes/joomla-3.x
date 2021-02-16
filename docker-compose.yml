@@ -20,3 +20,11 @@ services:
       - '80:80'
     volumes:
       - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    container_name: joomlagov_db
+    image: mysql:5
+    environment:
+      MYSQL_ROOT_PASSWORD: brasil
