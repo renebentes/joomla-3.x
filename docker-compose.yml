@@ -10,6 +10,8 @@ services:
     ports:
       - '3000:3000'
       - '3001:3001'
+    volumes:
+      - .:/usr/src/joomlagov
     command: gulp default --host web
 
   web:
