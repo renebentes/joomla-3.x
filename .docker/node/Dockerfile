@@ -1,9 +1,9 @@
 FROM node:slim
 
 LABEL author: Rene Bentes Pinto <github.com/renebentes> \
-	name=joomlagov/builder version=1.0.1
+	name=joomlagov/builder version=1.0.2
 
-WORKDIR /usr/src/joomlagov
+WORKDIR /joomlagov
 
 COPY ./package*.json ./
 COPY ./gulpfile.babel.js ./
