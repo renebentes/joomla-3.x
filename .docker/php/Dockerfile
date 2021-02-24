@@ -2,7 +2,9 @@ FROM php:7-fpm
 
 LABEL author="Rene Bentes Pinto <github.com/renebentes>"
 LABEL name=joomlagov/php
-LABEL version=1.0.0
+LABEL version=1.1.0
+
+ENV DEBIAN_FRONTEND noninteractive
 
 # Install PHP extensions
 RUN savedAptMark="$(apt-mark showmanual)"; \
