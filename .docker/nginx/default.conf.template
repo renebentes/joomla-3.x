@@ -1,0 +1,51 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name ${NGINX_HOST};
+    server_name_in_redirect off;
+
+    charset utf-8;
+
+    access_log /var/log/nginx/access_log;
+    error_log /var/log/nginx/error_log info;
+
+    root /var/www/html;
+
+    index index.php index.html index.htm default.html default.htm;
+    # Support Clean (aka Search Engine Friendly) URLs
+    location / {
+    # try to get file directly, try it as a directory or fall back to modx
+        try_files $uri $uri/ @mod_rewrite;
+    }
+
+    location @mod_rewrite {
+        #including ? in second rewrite argument causes nginx to drop GET params, so append them again
+        rewrite ^/(.*)$ /index.php?route=/$1;
+    }
+
+    # add global x-content-type-options header
+    add_header X-Content-Type-Options nosniff;
+
+    # deny running scripts inside writable directories
+    location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
+        return 403;
+        error_page 403 /403_error.html;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        try_files $fastcgi_script_name = 404;
+        fastcgi_pass php:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    # caching of files
+    location ~* \.(ico|pdf|flv)$ {
+        expires 1y;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|swf|xml|txt)$ {
+        expires 14d;
+    }
+}
