@@ -43,5 +43,7 @@ services:
     container_name: joomlagov_db
     image: mysql:5
     restart: always
+    volumes:
+      - .docker/mysql:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: brasil
