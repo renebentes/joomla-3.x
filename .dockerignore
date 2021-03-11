@@ -1,9 +1,12 @@
+**/.babelrc
 **/.classpath
 **/.dockerignore
+**/.editorconfig
 **/.env
 **/.git
 **/.gitignore
 **/.project
+**/.prettierrc
 **/.settings
 **/.toolstarget
 **/.vs
@@ -16,9 +19,11 @@
 **/charts
 **/docker-compose*
 **/Dockerfile*
+**/gulpfile.babel.js
 **/node_modules
 **/npm-debug.log
 **/obj
+**/package*.json
 **/secrets.dev.yaml
 **/values.dev.yaml
 README.md
