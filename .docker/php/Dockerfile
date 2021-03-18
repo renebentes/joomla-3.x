@@ -2,12 +2,24 @@ FROM php:7-fpm
 
 LABEL author="Rene Bentes Pinto <github.com/renebentes>"
 LABEL name=joomlagov/php
-LABEL version=1.1.0
+LABEL version=1.2.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN set -eux; \
+    \
+    apt-get update; \
+    \
+    apt-get install -y --no-install-recommends \
+        gettext-base \
+    ; \
+    \
+    rm -rf /var/lib/apt/lists/*
+
 # Install PHP extensions
-RUN savedAptMark="$(apt-mark showmanual)"; \
+RUN set -eux; \
+    \
+    savedAptMark="$(apt-mark showmanual)"; \
     \
     apt-get update; \
     \
@@ -44,6 +56,13 @@ RUN savedAptMark="$(apt-mark showmanual)"; \
         | xargs -rt apt-mark manual; \
     \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    mkdir /docker-entrypoint.d
+
+COPY .docker/php/docker-entrypoint.sh /
+
+COPY . .
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 CMD ["php-fpm"]
