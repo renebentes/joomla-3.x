@@ -1,21 +1,6 @@
 version: '3.9'
 
 services:
-  gulp:
-    container_name: joomlagov_gulp
-    restart: always
-    build:
-      context: .
-      dockerfile: ./.docker/node/Dockerfile
-    ports:
-      - '3000:3000'
-      - '3001:3001'
-    volumes:
-      - .:/joomlagov
-    command: gulp default --host web
-    depends_on:
-      - web
-
   web:
     container_name: joomlagov_web
     image: nginx:alpine
@@ -23,10 +8,10 @@ services:
       - 80:80
     volumes:
       - ./.docker/nginx:/etc/nginx/templates
-      - .:/var/www/html
+      - web-data:/var/www/html
     environment:
-      - NGINX_HOST:joomlagov.localhost
-    depends_on:
+      NGINX_HOST: localhost
+    links:
       - php
 
   php:
@@ -35,15 +20,16 @@ services:
       context: .
       dockerfile: ./.docker/php/Dockerfile
     volumes:
-      - .:/var/www/html
-    depends_on:
+      - web-data:/var/www/html
+    links:
       - db
 
   db:
     container_name: joomlagov_db
     image: mysql:5
     restart: always
-    volumes:
-      - .docker/mysql:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: brasil
+
+volumes:
+  web-data:
