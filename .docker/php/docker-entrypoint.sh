@@ -37,8 +37,9 @@ docker_process_init_files() {
 						. "$f"
 					fi
 					;;
-				*.php)
-					process_configuration $f;
+				*configuration.php)
+					process_envs $f;
+					move_file "$f.tmp" configuration.php;
 					remove_folder installation;
 					;;
 				*) warn "$0: Ignoring $f";;
@@ -51,20 +52,19 @@ docker_process_init_files() {
 	fi
 }
 
-process_configuration() {
-	local file_path="$1"
-	local filename=$(basename $file_path)
+set_default_envs() {
+	local var="$1"
+	local val="${2:-}"
+
+	if [ "${!var:-}" ]; then
+			val="${!var}"
+	fi
+
+	export "$var"="$val"
+}
+
+process_envs() {
 	local defined_envs
-
-	if [ -z "${JOOMLA_DB_NAME}" ];then
-		JOOMLA_DB_NAME="joomlagovdb"
-		export JOOMLA_DB_NAME
-	fi
-
-	if [ -z "${JOOMLA_DB_PREFIX}" ];then
-		JOOMLA_DB_PREFIX="xmx0n_"
-		export JOOMLA_DB_PREFIX
-	fi
 
 	if [ -z "${JOOMLA_DB_HOST}" -o -z "${JOOMLA_DB_USER}" -o -z "${JOOMLA_DB_PASSWORD}" ]; then
 		error "Unable to init default configuration.\n\tYou need to specify JOOMLA_DB_HOST, JOOMLA_DB_USER, JOOMLA_DB_PASSWORD environment variables."
@@ -73,13 +73,22 @@ process_configuration() {
 
 	defined_envs=$(printf '${%s} ' $(env | cut -d= -f1))
 
-	note "$0: Running envsubst on $file_path"
-	envsubst "$defined_envs" < "$file_path" > "$filename"
+	note "$0: Running envsubst on $1"
+	envsubst "$defined_envs" < "$1" > "$1.tmp"
+}
+
+move_file() {
+	[ ! -f $1 ] || return 0
+	mv $1 $2
 }
 
 remove_folder() {
+	[ ! -d $1 ] || return 0
 	rm -rf $1
 }
+
+set_default_envs 'JOOMLA_DB_NAME' 'joomlagovdb'
+set_default_envs 'JOOMLA_DB_PREFIX' 'xmx0n_'
 
 docker_process_init_files
 
