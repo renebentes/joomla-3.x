@@ -57,7 +57,7 @@ set_default_envs() {
 	local val="${2:-}"
 
 	if [ "${!var:-}" ]; then
-			val="${!var}"
+		val="${!var}"
 	fi
 
 	export "$var"="$val"
