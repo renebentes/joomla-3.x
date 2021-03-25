@@ -87,9 +87,25 @@ remove_folder() {
 	rm -rf $1
 }
 
+set_owner() {
+	uid="$(id -u)"
+	gid="$(id -g)"
+
+	if [ "$uid" = '0' ]; then
+		user='www-data'
+		group='www-data'
+	else
+		user="$uid"
+		group="$gid"
+	fi
+
+	chown -R "$user:$group" .
+}
+
 set_default_envs 'JOOMLA_DB_NAME' 'joomlagovdb'
 set_default_envs 'JOOMLA_DB_PREFIX' 'xmx0n_'
 
 docker_process_init_files
+set_owner
 
 exec "$@"
