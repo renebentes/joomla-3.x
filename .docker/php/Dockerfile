@@ -60,6 +60,7 @@ RUN set -eux; \
     mkdir /docker-entrypoint.d
 
 COPY .docker/php/docker-entrypoint.sh /
+COPY .docker/php/build-sample.php /
 
 COPY . .
 

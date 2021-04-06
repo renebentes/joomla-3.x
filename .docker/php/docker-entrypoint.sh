@@ -40,6 +40,7 @@ docker_process_init_files() {
 				*configuration.php)
 					process_envs $f;
 					move_file "$f.tmp" configuration.php;
+					build_sample;
 					remove_folder installation;
 					;;
 				*) warn "$0: Ignoring $f";;
@@ -100,6 +101,15 @@ set_owner() {
 	fi
 
 	chown -R "$user:$group" .
+}
+
+build_sample() {
+	local sample="$(pwd)/installation/sql/mysql/sample_padrao_egov.sql"
+	note "$0: Build sample for $sample"
+
+	[ -f $sample ] || return 0
+
+	php /build-sample.php $sample
 }
 
 set_default_envs 'JOOMLA_DB_NAME' 'joomlagovdb'
