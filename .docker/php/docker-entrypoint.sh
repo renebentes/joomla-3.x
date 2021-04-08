@@ -105,11 +105,11 @@ set_owner() {
 
 populate_sample() {
 	local sample="$(pwd)/installation/sql/mysql/sample_padrao_egov.sql"
-	note "$0: Populate database sample for $sample"
+	note "$0: Populate database sample for $(basename $sample)"
 
 	[ -f $sample ] || return 0
 
-	php /build-sample.php $sample
+	php /populate-sample.php $sample
 }
 
 set_default_envs 'JOOMLA_DB_NAME' 'joomlagovdb'

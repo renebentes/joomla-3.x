@@ -162,6 +162,6 @@ foreach ($queries as $query)
 	}
 }
 
-message('Populate database sample complete.')
+message('Populate database sample complete.');
 
 $mysql->close();
