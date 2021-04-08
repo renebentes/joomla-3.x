@@ -40,7 +40,7 @@ docker_process_init_files() {
 				*configuration.php)
 					process_envs $f;
 					move_file "$f.tmp" configuration.php;
-					build_sample;
+					populate_sample;
 					remove_folder installation;
 					;;
 				*) warn "$0: Ignoring $f";;
@@ -79,12 +79,12 @@ process_envs() {
 }
 
 move_file() {
-	[ ! -f $1 ] || return 0
+	[ -f $1 ] || return 0
 	mv $1 $2
 }
 
 remove_folder() {
-	[ ! -d $1 ] || return 0
+	[ -d $1 ] || return 0
 	rm -rf $1
 }
 
@@ -103,9 +103,9 @@ set_owner() {
 	chown -R "$user:$group" .
 }
 
-build_sample() {
+populate_sample() {
 	local sample="$(pwd)/installation/sql/mysql/sample_padrao_egov.sql"
-	note "$0: Build sample for $sample"
+	note "$0: Populate database sample for $sample"
 
 	[ -f $sample ] || return 0
 
