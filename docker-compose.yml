@@ -1,29 +1,19 @@
 version: '3.9'
 
 services:
-  builder:
-    container_name: joomlagov_builder
+  php:
+    container_name: joomlagov_php
     build:
       context: .
-      dockerfile: Dockerfile-node
-    ports:
-      - '3000:3000'
-      - '3001:3001'
-    volumes:
-      - .:/usr/src/joomlagov
-    command: gulp default --host web
-
-  web:
-    container_name: joomlagov_web
-    build: .
+      dockerfile: ./.docker/php/Dockerfile
     ports:
       - '80:80'
-    volumes:
-      - ./:/var/www/html
+    depends_on:
+      - db
 
-  # joomlagovdb:
-  #   image: mysql:5.7
-  #   container_name: joomlagov-db
-  #   restart: always
-  #   ports:
-  #     - "3306:3306"
+  db:
+    container_name: joomlagov_db
+    image: mariadb:10
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
